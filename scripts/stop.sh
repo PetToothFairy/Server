@@ -2,8 +2,7 @@ cd /home/ubuntu/Server
 
 sudo docker-compose down
 sudo docker image prune -a
-
-cp docker-compose.yml /home/ubuntu
+sudo docker network prune
 
 cd ../
 

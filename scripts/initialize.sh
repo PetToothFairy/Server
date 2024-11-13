@@ -6,5 +6,6 @@ git clone https://github.com/PetToothFairy/Server.git
 
 # docker-compose.yml 파일을 Server 디렉토리로 복사
 cp /home/ubuntu/docker-compose.yml /home/ubuntu/Server/
+cp /home/ubuntu/.env /home/ubuntu/Server
 
 sudo usermod -aG docker ubuntu
