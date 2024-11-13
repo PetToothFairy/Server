@@ -1,0 +1,30 @@
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: true
+  key:
+    jwt-secret-key: ${JWT_SECRET_KEY}
+    kakao-api-key: ${KAKAO_API_CLIENT_KEY}
+logging:
+  level:
+    "[com.example.server]": INFO
+    "[org.hibernate.type]": TRACE
