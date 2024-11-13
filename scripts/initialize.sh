@@ -1,2 +1,2 @@
 cd /home/ubuntu/Server
-git pull
+git pull origin master
