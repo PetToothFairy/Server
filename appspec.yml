@@ -1,0 +1,24 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/Server
+    overwrite: yes
+file_exists_behavior: OVERWRITE
+permissions:
+  - object: /home/ubuntu
+    pattern: '**'
+    owner: ubuntu
+    group: root
+
+hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      runas: ubuntu
+  AfterInstall:
+    - location: scripts/initialize.sh
+      runas: ubuntu
+  ApplicationStart:
+    - location: scripts/start.sh
+      runas: ubuntu
