@@ -1,3 +1,3 @@
 cd /home/ubuntu/Server
-docker-compose build
-docker-compose up -d
+sudo docker-compose build
+sudo docker-compose up -d

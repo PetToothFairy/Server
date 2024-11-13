@@ -1,7 +1,7 @@
 cd /home/ubuntu/Server
 
-docker-compose down
-docker image prune -a
+sudo docker-compose down
+sudo docker image prune -a
 
 cp docker-compose.yml /home/ubuntu
 
