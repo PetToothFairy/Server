@@ -23,6 +23,7 @@ spring:
     open-in-view: true
   key:
     jwt-secret-key: ${JWT_SECRET_KEY}
+    kakao-api-key: ${KAKAO_API_CLIENT_KEY}
 logging:
   level:
     "[com.example.server]": INFO
