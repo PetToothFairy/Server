@@ -24,6 +24,9 @@ spring:
   key:
     jwt-secret-key: ${JWT_SECRET_KEY}
     kakao-api-key: ${KAKAO_API_CLIENT_KEY}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   level:
     "[com.example.server]": INFO
