@@ -1,0 +1,30 @@
+name: deploy
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  trigger_codepipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      # AWS 인증 정보 설정
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{secrets.CODEDEPLOY_APP_NAME}} \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --deployment-group-name ${{secrets.CODEDEPLOY_DG_NAME}} \
