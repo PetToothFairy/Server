@@ -14,6 +14,12 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Set up Git credentials
+        run: echo "https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com" > ~/.git-credentials
+
+      - name: Configure Git to use credentials from file
+        run: git config --global credential.helper store
+
       # 파일 및 폴더를 압축하여 server.zip으로 저장
       - name: Zip distributions
         run: zip -r server.zip .
