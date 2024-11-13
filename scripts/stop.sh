@@ -7,4 +7,4 @@ cp docker-compose.yml /home/ubuntu
 
 cd ../
 
-rm -rf Server
+sudo rm -rf Server
