@@ -29,7 +29,6 @@ public class RegisterController {
                                     @RequestHeader("PetName") String PetName,
                                     @RequestHeader("PetWeight") Integer PetWeight
                                     ) {
-        Integer status = 200;
         try {
             registerService.isUserRejoin(AccessToken, ExpiresIn, RefreshToken, RefreshTokenExpiresIn, PetName, PetWeight);
         } catch (CException e) {
@@ -38,6 +37,6 @@ public class RegisterController {
             return ResponseEntity.status(500).body(e.toString());
         }
 
-        return ResponseEntity.status(status).body(".");
+        return ResponseEntity.status(200).body(".");
     }
 }

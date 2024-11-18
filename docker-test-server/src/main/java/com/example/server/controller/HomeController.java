@@ -45,9 +45,6 @@ public class HomeController {
 
         if(Objects.isNull(user))
             return ResponseEntity.status(500).body("유저 정보를 가져오지 못 했습니다.");
-
-        System.out.print("User : ");
-        System.out.println(user.toString());
         
         UserPet userPet = new UserPet(user.getPetName(), user.getPetWeight());
 

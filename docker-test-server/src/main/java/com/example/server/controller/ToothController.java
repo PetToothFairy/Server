@@ -1,7 +1,7 @@
 package com.example.server.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class ToothController {
     private final InvalidTokenService invalidTokenService;
 
     // 사용자가 애완견 이빨을 찍으면
-    @GetMapping("") 
+    @PutMapping("") 
     public ResponseEntity<?> tooth(@RequestHeader("AccessToken") String AccessToken) {
         try {
             invalidTokenService.isTokenInvalid(AccessToken);
