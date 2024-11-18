@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +57,7 @@ public class UserController {
     // 마이페이지를 수정하는 API
     // Input : AccessToken, PetName, PetWeight
     // Output : status(200, 401, 500)
-    @PutMapping("/setinfo")
+    @PatchMapping("/setinfo")
     public ResponseEntity<?> mypageGetinfo(
                                         @RequestHeader("AccessToken") String AccessToken,
                                         @RequestHeader("PetName") String PetName,

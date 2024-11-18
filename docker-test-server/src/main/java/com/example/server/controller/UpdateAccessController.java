@@ -1,7 +1,7 @@
 package com.example.server.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ public class UpdateAccessController {
 
     // AccessToken을 새로 발급 받았을때 사용하는 API.
     // 서버에 새로운 AccessToken을 제공.
-    @GetMapping("/accesstoken")
+    @PatchMapping("/accesstoken")
     public ResponseEntity<?> updateAccessToken(@RequestHeader("AccessToken") String AccessToken,
                                                 @RequestHeader("ExpiresIn") Integer ExpiresIn) {
         try {
