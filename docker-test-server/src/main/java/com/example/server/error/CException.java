@@ -10,9 +10,4 @@ public class CException extends RuntimeException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-
-    public CException(ErrorCode errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
-    }
 }

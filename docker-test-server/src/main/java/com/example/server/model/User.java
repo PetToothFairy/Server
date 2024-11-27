@@ -1,7 +1,5 @@
 package com.example.server.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,15 +25,6 @@ public class User {
     @Column(name = "pet_weight")
     private Integer petWeight;
     
-    @Column(name = "access_token")
-    private String accessToken;
-    
-    @Column(name = "expires_in")
-    private LocalDateTime expiresIn;
-    
-    @Column(name = "refresh_token")
-    private String refreshToken;
-    
-    @Column(name = "refresh_token_expires_in")
-    private LocalDateTime refreshTokenExpiresIn;
+    @Column(name = "random_id")
+    private String randomId;
 }
