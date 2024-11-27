@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private UserRepository userRepository;
 
-    public User getPetInformation(String AccessToken) throws Exception{
-        return userRepository.getUserInformationByAccessToken(AccessToken);
+    public User getPetInformation(Long id) throws Exception{
+        return userRepository.getUserInformationByAccessToken(id);
     }
 
-    public void setPetInformation(String AccessToken, String PetName, Integer PetWeight) throws Exception {
-        userRepository.setUserPetInformationByAccessToken(AccessToken, PetName, PetWeight);
+    public void setPetInformation(Long id, String PetName, Integer PetWeight) throws Exception {
+        userRepository.setUserPetInformationByAccessToken(id, PetName, PetWeight);
     }
 }

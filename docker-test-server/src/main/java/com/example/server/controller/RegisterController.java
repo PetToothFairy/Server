@@ -1,12 +1,21 @@
 package com.example.server.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.server.error.CErrorResponse;
 import com.example.server.error.CException;
+import com.example.server.error.ErrorCode;
+import com.example.server.jwt.JwtTokenService;
+import com.example.server.model.Token;
+import com.example.server.model.UserPet;
 import com.example.server.service.RegisterService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,27 +25,60 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/register")
 public class RegisterController {
     private final RegisterService registerService;
+    private final JwtTokenService jwtTokenService;
 
     // 회원가입이 끝나면 저장하기 위한 API
-    // Input : AccessToken, ExpiresI, RefreshToken, RefreshTokenExpiresIn, PetName, PetWeight
+    // Input : AccessToken, PetName, PetWeight
     // Output : status(200, 401, 500)
     @PostMapping("")
     public ResponseEntity<?> register(
                                     @RequestHeader("AccessToken") String AccessToken,
-                                    @RequestHeader("ExpiresIn") Integer ExpiresIn,
-                                    @RequestHeader("RefreshToken") String RefreshToken,
-                                    @RequestHeader("RefreshTokenExpiresIn") Integer RefreshTokenExpiresIn,
-                                    @RequestHeader("PetName") String PetName,
-                                    @RequestHeader("PetWeight") Integer PetWeight
+                                    @Valid @RequestBody UserPet userPet
                                     ) {
+        Long userId = Long.valueOf(0);
+        // 1. KAKAO OPEN API로 userId 확인.
+        // => Error : 유효하지 않는 토큰(에러)
         try {
-            registerService.isUserRejoin(AccessToken, ExpiresIn, RefreshToken, RefreshTokenExpiresIn, PetName, PetWeight);
-        } catch (CException e) {
-            return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getErrorCode().getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.toString());
+            userId = registerService.getUserIdByKakaoOpenApi(AccessToken);
+        } catch(Exception e) {
+            throw new CException(ErrorCode.KAKAO_INVALID_TOKEN);
         }
 
-        return ResponseEntity.status(200).body(".");
+        // 2. userId로 데이터베이스 확인
+        // => 데이터베이스 true : 이미 존재하는 유저(Bad Request 400)
+        try {
+            if(registerService.getUserIdByDatabase(userId) == true) {
+                throw new CException(ErrorCode.REGISTERED_USER);
+            }
+        } catch(Exception e) {
+            throw new CException(ErrorCode.REGISTERED_USER);
+        }
+
+        // 3. JWT AccessToken, RefreshToken 토큰 발급
+        Token token = new Token();
+        String randomId = jwtTokenService.generateRandomId();
+        try {
+            String accessToken = jwtTokenService.createAccessToken(userId);
+            String refreshToken = jwtTokenService.createRefreshToken(userId, randomId);
+            token.setAccessToken(accessToken);
+            token.setRefreshToken(refreshToken);
+        } catch(Exception e) {
+            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        // 4. 모든 정보 저장.
+        try {
+            registerService.createUserInfo(userId, randomId, userPet.getPetName(), userPet.getPetWeight());;
+        } catch(Exception e) {
+            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseEntity
+            .status(ErrorCode.SUCCESS.getStatus())
+            .body(CErrorResponse.builder()
+                .status(ErrorCode.SUCCESS.getStatus())
+                .message(token)
+                .build()
+            );
     }
 }

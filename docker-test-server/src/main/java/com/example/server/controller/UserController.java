@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.server.error.CErrorResponse;
 import com.example.server.error.CException;
+import com.example.server.error.ErrorCode;
+import com.example.server.jwt.JwtTokenService;
 import com.example.server.model.User;
 import com.example.server.model.UserPet;
 import com.example.server.service.InvalidTokenService;
@@ -21,8 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
-    private InvalidTokenService invalidTokenService;
-    private UserService userService;
+    private final InvalidTokenService invalidTokenService;
+    private final UserService userService;
+    private final JwtTokenService jwtTokenService;
 
     @GetMapping("test")
     public ResponseEntity<?> test() {
@@ -32,25 +36,49 @@ public class UserController {
     // 마이페이지
     // 마이페이지를 보여주는 API
     // Input : AccessToken
-    // Output : User
+    // Output : User status(200, 401, 500)
     @GetMapping("/getinfo")
     public ResponseEntity<?> mypageGetinfo(@RequestHeader("AccessToken") String AccessToken) {
+        // 1. RefreshToken Valid?
+        try {
+            if(jwtTokenService.validateAccessToken(AccessToken) == false) {
+                throw new CException(ErrorCode.INVALID_TOKEN);
+            }
+        } catch (Exception e) {
+            throw new CException(ErrorCode.INVALID_TOKEN);
+        }
+
+        // 2. Check userId
+        Long userId;
+        try {
+            userId = jwtTokenService.extractIdFromAccessToken(AccessToken);
+            if(invalidTokenService.existsById(userId) == false) {
+                throw new CException(ErrorCode.INVALID_TOKEN);
+            }
+        } catch (Exception e) {
+            throw new CException(ErrorCode.INVALID_TOKEN);
+        }
+
+        // 3. Get Pet Information By UserId
         User user = null;
         try {
-            invalidTokenService.isTokenInvalid(AccessToken);
-            user = userService.getPetInformation(AccessToken);
-        } catch (CException e) {
-            ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getErrorCode().getMessage());
+            user = userService.getPetInformation(userId);
         } catch (Exception e) {
-            ResponseEntity.status(500).body(e.toString());
+            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
         if(Objects.isNull(user))
-            ResponseEntity.status(500).body("유저 정보를 가져오지 못 했습니다.");
-
-        UserPet userPet = new UserPet(user.getPetName(), user.getPetWeight());
+            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
         
-        return ResponseEntity.status(200).body(userPet);
+        UserPet userPet = new UserPet(user.getPetName(), user.getPetWeight());
+
+        return ResponseEntity
+            .status(ErrorCode.SUCCESS.getStatus())
+            .body(CErrorResponse.builder()
+                .status(ErrorCode.SUCCESS.getStatus())
+                .message(userPet)
+                .build()
+            );
     }
 
     // 마이페이지 수정
@@ -63,15 +91,38 @@ public class UserController {
                                         @RequestHeader("PetName") String PetName,
                                         @RequestHeader("PetWeight") Integer PetWeight
                                         ) {
+                                            // 1. RefreshToken Valid?
         try {
-            invalidTokenService.isTokenInvalid(AccessToken);
-            userService.setPetInformation(AccessToken, PetName, PetWeight);
-        } catch (CException e) {
-            ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getErrorCode().getMessage());
+            if(jwtTokenService.validateAccessToken(AccessToken) == false) {
+                throw new CException(ErrorCode.INVALID_TOKEN);
+            }
         } catch (Exception e) {
-            ResponseEntity.status(500).body(e.toString());
+            throw new CException(ErrorCode.INVALID_TOKEN);
         }
 
-        return ResponseEntity.ok().body(".");
+        // 2. Check userId
+        Long userId;
+        try {
+            userId = jwtTokenService.extractIdFromAccessToken(AccessToken);
+            if(invalidTokenService.existsById(userId) == false) {
+                throw new CException(ErrorCode.INVALID_TOKEN);
+            }
+        } catch (Exception e) {
+            throw new CException(ErrorCode.INVALID_TOKEN);
+        }
+
+        try {
+            userService.setPetInformation(userId, PetName, PetWeight);
+        } catch (Exception e) {
+            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseEntity
+            .status(ErrorCode.SUCCESS.getStatus())
+            .body(CErrorResponse.builder()
+                .status(ErrorCode.SUCCESS.getStatus())
+                .message(".")
+                .build()
+            );
     }
 }
