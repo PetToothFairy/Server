@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.server.model.User;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    @Autowired
     private UserRepository userRepository;
 
     public User getPetInformation(Long id) throws Exception{

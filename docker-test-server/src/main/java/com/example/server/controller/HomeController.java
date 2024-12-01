@@ -31,7 +31,6 @@ public class HomeController {
     // Input : 파라미터 AccessToken
     // Output(200) : 홈페이지[이미 가입한 회원]
     // Output(401) : 유효하지 않은 토큰
-    // Output(402) : 리프레시토큰으로 토큰 재발급 필요.
     // Output(500) : 서버에러
     @GetMapping("")
     public ResponseEntity<?> home(@RequestHeader("AccessToken") String AccessToken) {
