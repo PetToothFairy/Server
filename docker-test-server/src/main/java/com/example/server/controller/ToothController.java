@@ -78,7 +78,7 @@ public class ToothController {
             if(koreanPart == null) {
                 continue;
             }
-            String percentStr = String.format("%.2f", entry.getValue() / totalCnt);
+            String percentStr = String.format("%.2f", entry.getValue() / totalCnt * 100);
             if(100 < Double.parseDouble(percentStr))
                 percentStr = "100.00";
             toothReport.setName(koreanPart);
