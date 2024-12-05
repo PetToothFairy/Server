@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class JwtTokenService {
     
-    private String secret = "hjkdasfh;jnkladfsjkl;dasfnkl;asdfjkl;asdfjkl;";
+    private String secret = System.getenv("JWT_SECRET_KEY");
     
     private int accessTokenExpMinutes = 600 * 1000;        // 10분
 
