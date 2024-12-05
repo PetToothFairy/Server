@@ -63,7 +63,7 @@ public class RegisterService {
             PetWeight,
             RandomID,
             0,
-            LocalDate.now(ZoneId.of("Asia/Seoul"))
+            LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1)
             );
 
         // Database에 Data 저장.

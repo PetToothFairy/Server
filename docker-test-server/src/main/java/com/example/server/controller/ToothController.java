@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +97,7 @@ public class ToothController {
 
         // 5. Check Date if Date yesterday or after, change value
         LocalDate userDateRenew = user.getToothDateRenew();
-        LocalDate nowDate = LocalDate.now();
+        LocalDate nowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         if(!userDateRenew.isEqual(nowDate)) {
             if(userDateRenew.plusDays(1).isEqual(nowDate)) {
                 // Seq += 1
@@ -114,9 +115,6 @@ public class ToothController {
                 throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
             }
         }
-        
-
-        
 
         ToothDataAnalyzer toothDataAnalyzer = new ToothDataAnalyzer();
         toothDataAnalyzer.setReports(toothReports);
