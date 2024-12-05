@@ -1,6 +1,9 @@
 package com.example.server.service;
 
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -58,7 +61,9 @@ public class RegisterService {
             userId,
             PetName, 
             PetWeight,
-            RandomID
+            RandomID,
+            0,
+            LocalDate.now(ZoneId.of("Asia/Seoul"))
             );
 
         // Database에 Data 저장.

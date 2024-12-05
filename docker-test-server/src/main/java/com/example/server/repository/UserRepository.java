@@ -1,5 +1,7 @@
 package com.example.server.repository;
 
+import java.time.LocalDate;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,19 +21,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
         @Modifying
         @Transactional
-        @Query(value = "INSERT INTO user_tb (id, pet_name, pet_weight, random_id) VALUES (:#{#user.id}, :#{#user.petName}, :#{#user.petWeight}, :#{#user.randomId})", nativeQuery = true)
+        @Query(value = "INSERT INTO user_tb (id, pet_name, pet_weight, random_id, tooth_seq, tooth_date_renew) VALUES (:#{#user.id}, :#{#user.petName}, :#{#user.petWeight}, :#{#user.randomId}, :#{#user.toothSeq}, :#{#user.toothDateRenew})", nativeQuery = true)
         void insertUserInformation(@Param("user") User user);
         
         @Query("SELECT u FROM User u WHERE u.id = :id")
-        User getUserInformationByAccessToken(@Param("id") Long id);
+        User getUserInformationById(@Param("id") Long id);
         
         @Modifying
         @Transactional
         @Query(value = "UPDATE user_tb u SET u.pet_name=:petName, u.pet_weight=:petWeight WHERE u.id=:id", nativeQuery = true)
-        void setUserPetInformationByAccessToken(@Param("id") Long id, @Param("petName") String petName, @Param("petWeight") Integer petWeight);
+        void setUserPetInformationById(@Param("id") Long id, @Param("petName") String petName, @Param("petWeight") Integer petWeight);
 
         @Modifying
         @Transactional
         @Query(value = "UPDATE user_tb u SET u.random_id=:randomId, u.random_id=:randomId WHERE u.id = :id", nativeQuery = true)
         void updateRandomIdByUserId(@Param("id") Long id, @Param("randomId") String randomId);
+
+        @Modifying
+        @Transactional
+        @Query(value = "UPDATE user_tb u SET u.tooth_seq=:toothSeq, u.tooth_date_renew=:toothDateRenew WHERE u.id = :id", nativeQuery = true)
+        void updateSeqAndDateByUserId(@Param("id") Long id, @Param("toothSeq") int toothSeq, @Param("toothDateRenew") LocalDate toothDateRenew);
 }
