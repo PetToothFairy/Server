@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.error.CErrorResponse;
-import com.example.server.error.CException;
-import com.example.server.error.ErrorCode;
+import com.example.server.Response.BaseResponse;
+import com.example.server.Response.CException;
+import com.example.server.Response.ErrorBase;
+import com.example.server.Response.SuccessBase;
 import com.example.server.jwt.JwtTokenService;
 import com.example.server.model.Token;
 import com.example.server.service.LoginService;
@@ -35,18 +36,18 @@ public class LoginController {
         try {
             userId = loginService.getUserIdByKakaoOpenApi(AccessToken);
         } catch(Exception e) {
-            throw new CException(ErrorCode.KAKAO_INVALID_TOKEN);
+            throw new CException(ErrorBase.KAKAO_INVALID_TOKEN);
         }
         // 2. userId로 데이터베이스 확인
         // => 데이터베이스 false : 존재하지 않는 유저(회원가입)
         try {
             System.out.println(loginService.getUserIdByDatabase(userId));
             if(loginService.getUserIdByDatabase(userId) == false) {
-                throw new CException(ErrorCode.GHOST_USER);
+                throw new CException(ErrorBase.GHOST_USER);
             }
         } catch(Exception e) {
             System.out.println("Here");
-            throw new CException(ErrorCode.GHOST_USER);
+            throw new CException(ErrorBase.GHOST_USER);
         }
 
         // 3. JWT AccessToken, RefreshToken 토큰 발급
@@ -58,22 +59,18 @@ public class LoginController {
             token.setAccessToken(accessToken);
             token.setRefreshToken(refreshToken);
         } catch(Exception e) {
-            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         }
 
         // 4. RefreshToken RandomID Database에 저장
         try {
             loginService.updateRandomIdByUserId(userId, randomId);
         } catch(Exception e) {
-            throw new CException(ErrorCode.KAKAO_INVALID_TOKEN);
+            throw new CException(ErrorBase.KAKAO_INVALID_TOKEN);
         }
 
         return ResponseEntity
-            .status(ErrorCode.SUCCESS.getStatus())
-            .body(CErrorResponse.builder()
-                .status(ErrorCode.SUCCESS.getStatus())
-                .message(token)
-                .build()
-            );
+            .status(SuccessBase.SUCCESS.getStatus())
+            .body(BaseResponse.success(SuccessBase.SUCCESS, token));
     }
 }

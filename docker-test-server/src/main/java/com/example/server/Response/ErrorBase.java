@@ -1,14 +1,11 @@
-package com.example.server.error;
+package com.example.server.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
-    // 200
-    SUCCESS(200, "."),
-
+public enum ErrorBase {
     // 400 에러
     REGISTERED_USER(400, "이미 존재하는 유저"),
     NULL_VALUE(400, "필수 변수에 NULL값 존재"),

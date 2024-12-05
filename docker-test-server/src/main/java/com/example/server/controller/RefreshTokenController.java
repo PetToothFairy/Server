@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.error.CErrorResponse;
-import com.example.server.error.CException;
-import com.example.server.error.ErrorCode;
+import com.example.server.Response.BaseResponse;
+import com.example.server.Response.CException;
+import com.example.server.Response.ErrorBase;
+import com.example.server.Response.SuccessBase;
 import com.example.server.jwt.JwtTokenService;
 import com.example.server.model.Token;
 import com.example.server.service.RefreshTokenService;
@@ -28,10 +29,10 @@ public class RefreshTokenController {
         // 1. RefreshToken Valid?
         try {
             if(jwtTokenService.validateRefreshToken(RefreshToken) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         // 2. Get userId & radomId from RefreshToken
@@ -41,19 +42,19 @@ public class RefreshTokenController {
             userId = jwtTokenService.extractIdFromRefreshToken(RefreshToken);
             randomId = jwtTokenService.extractRandomIdFromRefreshToken(RefreshToken);
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         if(userId == null || randomId == null)
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
 
         // 3. Check userId & radomId
         try {
             if(refreshTokenService.checkIdAndRandomId(userId, randomId) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         // 4. JWT AccessToken, RefreshToken 토큰 발급
@@ -65,22 +66,18 @@ public class RefreshTokenController {
             token.setAccessToken(accessToken);
             token.setRefreshToken(refreshToken);
         } catch(Exception e) {
-            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         }
 
         // 5. RefreshToken RandomID Database에 수정
         try {
             refreshTokenService.updateRandomIdByUserId(userId, new_randomId);
         } catch(Exception e) {
-            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         }
 
         return ResponseEntity
-            .status(ErrorCode.SUCCESS.getStatus())
-            .body(CErrorResponse.builder()
-                .status(ErrorCode.SUCCESS.getStatus())
-                .message(token)
-                .build()
-            );
+            .status(SuccessBase.SUCCESS.getStatus())
+            .body(BaseResponse.success(SuccessBase.SUCCESS, token));
     }
 }

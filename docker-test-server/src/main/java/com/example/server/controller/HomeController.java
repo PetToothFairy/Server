@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.error.CErrorResponse;
-import com.example.server.error.CException;
-import com.example.server.error.ErrorCode;
+import com.example.server.Response.BaseResponse;
+import com.example.server.Response.CException;
+import com.example.server.Response.ErrorBase;
+import com.example.server.Response.SuccessBase;
 import com.example.server.jwt.JwtTokenService;
 import com.example.server.model.User;
 import com.example.server.model.UserPet;
@@ -37,11 +38,11 @@ public class HomeController {
         // 1. RefreshToken Valid?
         try {
             if(jwtTokenService.validateAccessToken(AccessToken) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
 
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         // 2. Check userId
@@ -49,10 +50,10 @@ public class HomeController {
         try {
             userId = jwtTokenService.extractIdFromAccessToken(AccessToken);
             if(invalidTokenService.existsById(userId) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         // 3. Get Pet Information By UserId
@@ -60,20 +61,16 @@ public class HomeController {
         try {
             user = homeService.getPetInformation(userId);
         } catch (Exception e) {
-            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         }
 
         if(Objects.isNull(user))
-            throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         
         UserPet userPet = new UserPet(user.getPetName(), user.getPetWeight());
 
         return ResponseEntity
-            .status(ErrorCode.SUCCESS.getStatus())
-            .body(CErrorResponse.builder()
-                .status(ErrorCode.SUCCESS.getStatus())
-                .message(userPet)
-                .build()
-            );
+            .status(SuccessBase.SUCCESS.getStatus())
+            .body(BaseResponse.success(SuccessBase.SUCCESS, userPet));
     }
 }

@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.error.CErrorResponse;
-import com.example.server.error.CException;
-import com.example.server.error.ErrorCode;
+import com.example.server.Response.BaseResponse;
+import com.example.server.Response.CException;
+import com.example.server.Response.ErrorBase;
+import com.example.server.Response.SuccessBase;
 import com.example.server.jwt.JwtTokenService;
 import com.example.server.service.InvalidTokenService;
 
@@ -26,10 +27,10 @@ public class ToothController {
         // 1. RefreshToken Valid?
         try {
             if(jwtTokenService.validateAccessToken(AccessToken) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
 
         // 2. Check userId
@@ -37,21 +38,17 @@ public class ToothController {
         try {
             userId = jwtTokenService.extractIdFromAccessToken(AccessToken);
             if(invalidTokenService.existsById(userId) == false) {
-                throw new CException(ErrorCode.INVALID_TOKEN);
+                throw new CException(ErrorBase.INVALID_TOKEN);
             }
         } catch (Exception e) {
-            throw new CException(ErrorCode.INVALID_TOKEN);
+            throw new CException(ErrorBase.INVALID_TOKEN);
         }
         
         // 3. Create New Data
 
 
         return ResponseEntity
-            .status(ErrorCode.SUCCESS.getStatus())
-            .body(CErrorResponse.builder()
-                .status(ErrorCode.SUCCESS.getStatus())
-                .message(".")
-                .build()
-            );
+            .status(SuccessBase.SUCCESS.getStatus())
+            .body(BaseResponse.success(SuccessBase.SUCCESS, "."));
     }
 }
