@@ -69,7 +69,7 @@ public class RegisterController {
 
         // 4. 모든 정보 저장.
         try {
-            registerService.createUserInfo(userId, randomId, userPet.getPetName(), userPet.getPetWeight());;
+            registerService.createUserInfo(userId, randomId, userPet.getPetName(), userPet.getPetWeight());
         } catch(Exception e) {
             throw new CException(ErrorBase.INTERNAL_SERVER_ERROR);
         }

@@ -1,5 +1,8 @@
 package com.example.server.model;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,4 +30,10 @@ public class User {
     
     @Column(name = "random_id")
     private String randomId;
+
+    @Column(name = "tooth_seq")
+    private Integer toothSeq = 0;
+
+    @Column(name = "tooth_date_renew")
+    private LocalDate toothDateRenew = LocalDate.now(ZoneId.of("Asia/Seoul"));
 }

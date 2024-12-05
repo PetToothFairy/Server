@@ -13,6 +13,6 @@ public class HomeService {
     private final UserRepository userRepository;
 
     public User getPetInformation(Long userId) throws Exception{
-        return userRepository.getUserInformationByAccessToken(userId);
+        return userRepository.getUserInformationById(userId);
     }
 }

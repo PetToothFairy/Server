@@ -15,10 +15,10 @@ public class UserService {
     private UserRepository userRepository;
 
     public User getPetInformation(Long id) throws Exception{
-        return userRepository.getUserInformationByAccessToken(id);
+        return userRepository.getUserInformationById(id);
     }
 
     public void setPetInformation(Long id, String PetName, Integer PetWeight) throws Exception {
-        userRepository.setUserPetInformationByAccessToken(id, PetName, PetWeight);
+        userRepository.setUserPetInformationById(id, PetName, PetWeight);
     }
 }
