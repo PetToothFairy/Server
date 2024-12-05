@@ -2,9 +2,12 @@ package com.example.server.controller;
 
 import java.util.Objects;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -88,8 +91,7 @@ public class UserController {
     @PatchMapping("/setinfo")
     public ResponseEntity<?> mypageGetinfo(
                                         @RequestHeader("AccessToken") String AccessToken,
-                                        @RequestHeader("PetName") String PetName,
-                                        @RequestHeader("PetWeight") Integer PetWeight
+                                        @Valid @RequestBody UserPet userPet
                                         ) {
                                             // 1. RefreshToken Valid?
         try {
@@ -112,7 +114,7 @@ public class UserController {
         }
 
         try {
-            userService.setPetInformation(userId, PetName, PetWeight);
+            userService.setPetInformation(userId, userPet.getPetName(), userPet.getPetWeight());
         } catch (Exception e) {
             throw new CException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
