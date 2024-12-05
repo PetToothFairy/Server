@@ -10,10 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class CExceptionHandler {
     @ExceptionHandler(CException.class)
-    protected ResponseEntity<ErrorBase> handleCustomException(CException error) {
+    protected ResponseEntity<BaseResponse<ErrorBase>> handleCustomException(CException error) {
+        BaseResponse<ErrorBase> response = BaseResponse.error(error.getErrorBase());
+
         return ResponseEntity
             .status(error.getErrorBase().getStatus())
-            .body(error.getErrorBase());
+            .body(response);
     }
 
     // Null 값 처리
