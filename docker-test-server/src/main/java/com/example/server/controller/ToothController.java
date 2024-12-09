@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ public class ToothController {
     private final ToothService toothService;
     private final Double totalCnt = 500.0;
 
-    @GetMapping("")
+    @PostMapping("")
     public ResponseEntity<?> mypageGetinfo
                                         (
                                             @RequestHeader("AccessToken") String AccessToken,
