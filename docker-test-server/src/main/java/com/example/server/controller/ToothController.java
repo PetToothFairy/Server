@@ -3,6 +3,7 @@ package com.example.server.controller;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,20 @@ public class ToothController {
         
         // 3. Count Frequency
         Map<String, Integer> frequency = new HashMap<>();
+        frequency.put("UNDER_FRONT", 0);
+        frequency.put("UP_FRONT", 0);
+        frequency.put("UNDER_RIGHT_CANINE", 0);
+        frequency.put("UP_RIGHT_CANINE", 0);
+        frequency.put("UNDER_RIGHT_MOLAR_OUTSIDE", 0);
+        frequency.put("UP_RIGHT_MOLAR_OUTSIDE", 0);
+        frequency.put("UP_LEFT_MOLAR_CHEWING_SIDE", 0);
+        frequency.put("UP_RIGHT_MOLAR_CHEWING_SIDE", 0);
+        frequency.put("DOWN_RIGHT_MOLAR_CHEWING_SIDE", 0);
+        frequency.put("DOWN_LEFT_MOLAR_CHEWING_SIDE", 0);
+        frequency.put("UP_LEFT_MOLAR_OUTSIDE", 0);
+        frequency.put("UNDER_LEFT_MOLAR_OUTSIDE", 0);
+        frequency.put("UNDER_LEFT_CANINE", 0);
+        frequency.put("UP_LEFT_CANINE", 0);
     
         for (String instruction : Instructions) {
             frequency.put(instruction, frequency.getOrDefault(instruction, 0) + 1);
@@ -86,6 +101,8 @@ public class ToothController {
             toothReport.setDescription(toothService.evaluationPercentValue(Double.parseDouble(percentStr)));
             toothReports.add(toothReport);
         }
+
+        Collections.sort(toothReports);
 
         // 4. Get Sequence Data
         User user = null;
