@@ -13,9 +13,26 @@ public class ToothDataAnalyzer {
 
     @Getter
     @Setter
-    public static class ToothReport {
+    public static class ToothReport implements Comparable<ToothReport>{
         private String name;
         private String percent;
         private String description;
+
+        @Override
+        public int compareTo(ToothReport other) {
+            // null 체크
+            if (this.name == null && other.name == null) {
+                return 0;
+            }
+            if (this.name == null) {
+                return -1;
+            }
+            if (other.name == null) {
+                return 1;
+            }
+            
+            // name을 기준으로 오름차순 정렬
+            return this.name.compareTo(other.name);
+        }
     }
 }
