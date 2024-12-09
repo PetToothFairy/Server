@@ -21,18 +21,18 @@ public class ToothDataAnalyzer {
         @Override
         public int compareTo(ToothReport other) {
             // null 체크
-            if (this.name == null && other.name == null) {
+            if (this.percent == null && other.percent == null) {
                 return 0;
             }
-            if (this.name == null) {
+            if (this.percent == null) {
                 return -1;
             }
-            if (other.name == null) {
+            if (other.percent == null) {
                 return 1;
             }
             
             // name을 기준으로 오름차순 정렬
-            return this.name.compareTo(other.name);
+            return this.percent.compareTo(other.percent);
         }
     }
 }
