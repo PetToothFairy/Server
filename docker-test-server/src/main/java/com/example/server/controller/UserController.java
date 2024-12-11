@@ -118,6 +118,6 @@ public class UserController {
 
         return ResponseEntity
             .status(SuccessBase.SUCCESS.getStatus())
-            .body(BaseResponse.success(SuccessBase.SUCCESS, "."));
+            .body(BaseResponse.success(SuccessBase.SUCCESS, userPet));
     }
 }
