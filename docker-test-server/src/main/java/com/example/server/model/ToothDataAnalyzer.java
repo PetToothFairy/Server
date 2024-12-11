@@ -15,7 +15,7 @@ public class ToothDataAnalyzer {
     @Setter
     public static class ToothReport implements Comparable<ToothReport>{
         private String name;
-        private String percent;
+        private Double percent;
         private String description;
 
         @Override
