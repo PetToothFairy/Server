@@ -97,7 +97,7 @@ public class ToothController {
             if(100 < Double.parseDouble(percentStr))
                 percentStr = "100.00";
             toothReport.setName(koreanPart);
-            toothReport.setPercent(percentStr);
+            toothReport.setPercent(Double.parseDouble(percentStr));
             toothReport.setDescription(toothService.evaluationPercentValue(Double.parseDouble(percentStr)));
             toothReports.add(toothReport);
         }
