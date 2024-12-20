@@ -35,7 +35,7 @@ public class ToothController {
     private final JwtTokenService jwtTokenService;
     private final InvalidTokenService invalidTokenService;
     private final ToothService toothService;
-    private final Double totalCnt = 500.0;
+    private final Double totalCnt = 8.0;
 
     @PostMapping("")
     public ResponseEntity<?> mypageGetinfo
