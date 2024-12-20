@@ -9,17 +9,19 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class JwtTokenService {
-    
-    private String secret = System.getenv("JWT_SECRET_KEY");
-    
-    private int accessTokenExpMinutes = 600 * 1000;        // 10분
+    Dotenv dotenv = Dotenv.configure().load();
 
-    private int refreshTokenExpMinutes = 1209600 * 1000;   // 2주
+    private String secret = dotenv.get("JWT_SECRET_KEY");
+    
+    private int accessTokenExpMinutes = 1728000 * 1000;        // 10분
+
+    private int refreshTokenExpMinutes = 12096000 * 1000;   // 2주
 
     private final Algorithm algorithm = Algorithm.HMAC256(secret);
     
