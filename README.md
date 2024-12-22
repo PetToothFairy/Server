@@ -66,7 +66,7 @@ docker-compose down
 
 <br>
 
-# 📁 Client Folder Structure
+# 📁 Baekend Folder Structure
 
 ```
 📁 PetToothPairy
